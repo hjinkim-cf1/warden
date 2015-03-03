@@ -1,6 +1,6 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "spec_helper"
+require 'spec_helper'
 
 describe Warden::Protocol::ResourceLimits do
   subject do

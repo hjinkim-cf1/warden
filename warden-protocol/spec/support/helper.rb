@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 module Helper
   def self.included(base)
@@ -11,16 +11,20 @@ module Helper
       if a[key].respond_to?(:encoding)
         a[key].should == b[key].force_encoding(a[key].encoding)
       else
-        a[key].should == b[key]
+        if a[key]
+          expect(a[key]).to eq(b[key])
+        else
+          expect(b[key]).to be_falsey
+        end
       end
     end
   end
 
   module ClassMethods
     def field(field, &blk)
-      describe field do
+      describe field.to_s do
         let(:field) do
-          subject.fields.values.detect { |f| f.name == field }
+          subject.__beefcake_fields__.values.detect { |f| f.name == field }
         end
 
         instance_eval(&blk)
@@ -28,7 +32,7 @@ module Helper
     end
 
     def it_should_be_required
-      it "should be required" do
+      it 'should be required' do
         subject.should be_valid
         subject.send("#{field.name}=", nil)
         subject.should_not be_valid
@@ -36,7 +40,7 @@ module Helper
     end
 
     def it_should_be_optional
-      it "should be optional" do
+      it 'should be optional' do
         subject.should be_valid
         subject.send("#{field.name}=", nil)
         subject.should be_valid
@@ -51,17 +55,17 @@ module Helper
     end
 
     def it_should_be_typed_as_uint
-      it "should not allow a signed integer" do
+      it 'should not allow a signed integer' do
         subject.send("#{field.name}=", -1)
         subject.should_not be_valid
       end
 
-      it "should allow zero" do
+      it 'should allow zero' do
         subject.send("#{field.name}=", 0)
         subject.should be_valid
       end
 
-      it "should allow integers larger than zero" do
+      it 'should allow integers larger than zero' do
         subject.send("#{field.name}=", 37)
         subject.should be_valid
       end
@@ -70,12 +74,12 @@ module Helper
     def it_should_be_typed_as_uint32
       it_should_be_typed_as_uint
 
-      it "should allow integer 2^32-1" do
-        subject.send("#{field.name}=", 2**32-1)
+      it 'should allow integer 2^32-1' do
+        subject.send("#{field.name}=", 2**32 - 1)
         subject.should be_valid
       end
 
-      it "should not allow integer 2^32" do
+      it 'should not allow integer 2^32' do
         subject.send("#{field.name}=", 2**32)
         subject.should_not be_valid
       end
@@ -84,36 +88,36 @@ module Helper
     def it_should_be_typed_as_uint64
       it_should_be_typed_as_uint
 
-      it "should allow integer 2^64-1" do
-        subject.send("#{field.name}=", 2**64-1)
+      it 'should allow integer 2^64-1' do
+        subject.send("#{field.name}=", 2**64 - 1)
         subject.should be_valid
       end
 
-      it "should not allow integer 2^64" do
+      it 'should not allow integer 2^64' do
         subject.send("#{field.name}=", 2**64)
         subject.should_not be_valid
       end
     end
 
     def it_should_be_typed_as_string
-      it "should allow an empty string" do
-        subject.send("#{field.name}=", "")
+      it 'should allow an empty string' do
+        subject.send("#{field.name}=", '')
         subject.should be_valid
       end
 
-      it "should allow a non-empty string" do
-        subject.send("#{field.name}=", "non-empty")
+      it 'should allow a non-empty string' do
+        subject.send("#{field.name}=", 'non-empty')
         subject.should be_valid
       end
     end
 
     def it_should_be_typed_as_boolean
-      it "should allow false" do
+      it 'should allow false' do
         subject.send("#{field.name}=", false)
         subject.should be_valid
       end
 
-      it "should allow true" do
+      it 'should allow true' do
         subject.send("#{field.name}=", true)
         subject.should be_valid
       end

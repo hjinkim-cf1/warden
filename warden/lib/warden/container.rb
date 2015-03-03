@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 # Insecure container should be available on all platforms
 require "warden/container/insecure"
@@ -8,5 +8,5 @@ if RUBY_PLATFORM =~ /linux/i
   require "warden/container/linux"
 else
   # Define stub
-  class Warden::Container::Linux; end
+  class Warden::Container::Linux < Warden::Container::Base; end
 end

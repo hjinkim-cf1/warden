@@ -1,13 +1,13 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "beefcake"
+require 'beefcake'
 
 module Beefcake
   class Buffer
     # Patch beefcake to be encoding-agnostic
     def append_string(s)
       if s.respond_to?(:force_encoding)
-        s = s.dup.force_encoding("binary")
+        s = s.dup.force_encoding('binary')
       end
 
       append_uint64(s.length)
@@ -19,24 +19,24 @@ end
 module Warden
   module Protocol
     TypeConverter = {
-      :bool     => lambda do |arg|
-        return true if arg.downcase == "true"
-        return false if arg.downcase == "false"
+      bool: lambda do |arg|
+        return true if arg.downcase == 'true'
+        return false if arg.downcase == 'false'
         raise ArgumentError, "Expected 'true' or 'false', but received: '#{arg}'."
       end,
 
-      :int32    => lambda { |arg| Integer(arg) },
-      :uint32   => lambda { |arg| Integer(arg) },
-      :sint32   => lambda { |arg| Integer(arg) },
-      :int64    => lambda { |arg| Integer(arg) },
-      :uint64   => lambda { |arg| Integer(arg) },
-      :fixed32  => lambda { |arg| Float(arg) },
-      :sfixed32 => lambda { |arg| Float(arg) },
-      :float    => lambda { |arg| Float(arg) },
-      :fixed64  => lambda { |arg| Float(arg) },
-      :sfixed64 => lambda { |arg| Float(arg) },
-      :double   => lambda { |arg| Float(arg) },
-      :string   => lambda { |arg| String(arg) },
+      int32: lambda { |arg| Integer(arg) },
+      uint32: lambda { |arg| Integer(arg) },
+      sint32: lambda { |arg| Integer(arg) },
+      int64: lambda { |arg| Integer(arg) },
+      uint64: lambda { |arg| Integer(arg) },
+      fixed32: lambda { |arg| Float(arg) },
+      sfixed32: lambda { |arg| Float(arg) },
+      float: lambda { |arg| Float(arg) },
+      fixed64: lambda { |arg| Float(arg) },
+      sfixed64: lambda { |arg| Float(arg) },
+      double: lambda { |arg| Float(arg) },
+      string: lambda { |arg| String(arg) },
     }
 
     # Used to wrap around Beefcake errors.
@@ -48,18 +48,18 @@ module Warden
       end
 
       def message
-        return @cause.message
+        @cause.message
       end
     end
 
     def self.protocol_type_to_str(protocol_type)
       if protocol_type.class == Module
-        return "#{protocol_type.constants.sort.join(", ")}"
+        return "#{protocol_type.constants.sort.join(', ')}"
       elsif protocol_type.is_a?(Symbol)
-        return "#{protocol_type.to_s}"
+        return "#{protocol_type}"
       end
 
-      return nil
+      nil
     end
 
     def self.to_ruby_type(str, protocol_type)
@@ -83,10 +83,10 @@ module Warden
         if base.name =~ /(Request|Response)$/
           base.extend(ClassMethods)
 
-          case $1
-          when "Request"
+          case Regexp.last_match(1)
+          when 'Request'
             base.send(:include, BaseRequest)
-          when "Response"
+          when 'Response'
             base.send(:include, BaseResponse)
           end
         end
@@ -94,7 +94,8 @@ module Warden
 
       def safe
         yield
-      rescue Beefcake::Message::WrongTypeError,
+      rescue NoMethodError,
+             Beefcake::Message::WrongTypeError,
              Beefcake::Message::InvalidValueError,
              Beefcake::Message::RequiredFieldNotSetError => e
         raise ProtocolError, e
@@ -108,7 +109,7 @@ module Warden
 
       def wrap
         safe do
-          Message.new(:type => self.class.type, :payload => encode)
+          Message.new(type: self.class.type, payload: encode)
         end
       end
 
@@ -132,21 +133,21 @@ module Warden
         end
 
         def type_underscored
-          type_name.gsub(/(.)([A-Z])/, "\\1_\\2").downcase
+          type_name.gsub(/(.)([A-Z])/, '\\1_\\2').downcase
         end
 
         def type_name
-          type_name = name.gsub(/(Request|Response)$/, "")
-          type_name = type_name.split("::").last
+          type_name = name.gsub(/(Request|Response)$/, '')
+          type_name = type_name.split('::').last
           type_name
         end
       end
     end
 
     module BaseRequest
-      def create_response(attributes = {})
-        klass_name = self.class.name.gsub(/Request$/, "Response")
-        klass_name = klass_name.split("::").last
+      def create_response(attributes={})
+        klass_name = self.class.name.gsub(/Request$/, 'Response')
+        klass_name = klass_name.split('::').last
         klass = Protocol.const_get(klass_name)
         klass.new(attributes)
       end
@@ -164,5 +165,5 @@ module Warden
   end
 end
 
-require "warden/protocol/pb"
-require "warden/protocol/message"
+require 'warden/protocol/pb'
+require 'warden/protocol/message'

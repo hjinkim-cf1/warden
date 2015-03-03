@@ -1,8 +1,8 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "spec_helper"
+require 'spec_helper'
 
-shared_examples "disk limiting" do
+shared_examples 'disk limiting' do
   field :block_limit do
     it_should_be_optional
     it_should_be_typed_as_uint64
@@ -66,22 +66,24 @@ end
 
 describe Warden::Protocol::LimitDiskRequest do
   subject(:request) do
-    described_class.new(:handle => "handle")
+    described_class.new(handle: 'handle')
   end
 
-  it_should_behave_like "wrappable request"
+  it_should_behave_like 'wrappable request'
 
-  its("class.type_camelized") { should == "LimitDisk" }
-  its("class.type_underscored") { should == "limit_disk" }
+  it 'has a class type' do
+    expect(request.class.type_camelized).to eq('LimitDisk')
+    expect(request.class.type_underscored).to eq('limit_disk')
+  end
 
   field :handle do
     it_should_be_required
     it_should_be_typed_as_string
   end
 
-  it_should_behave_like "disk limiting"
+  it_should_behave_like 'disk limiting'
 
-  it "should respond to #create_response" do
+  it 'should respond to #create_response' do
     request.create_response.should be_a(Warden::Protocol::LimitDiskResponse)
   end
 end
@@ -91,13 +93,15 @@ describe Warden::Protocol::LimitDiskResponse do
     described_class.new
   end
 
-  it_should_behave_like "wrappable response"
+  it_should_behave_like 'wrappable response'
 
-  its("class.type_camelized") { should == "LimitDisk" }
-  its("class.type_underscored") { should == "limit_disk" }
+  it 'has a class type' do
+    expect(response.class.type_camelized).to eq('LimitDisk')
+    expect(response.class.type_underscored).to eq('limit_disk')
+  end
 
   it { should be_ok }
   it { should_not be_error }
 
-  it_should_behave_like "disk limiting"
+  it_should_behave_like 'disk limiting'
 end

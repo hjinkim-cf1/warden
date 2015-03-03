@@ -1,6 +1,6 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "warden/protocol/base"
+require 'warden/protocol/base'
 
 module Warden
   module Protocol
@@ -8,21 +8,21 @@ module Warden
       CRLF = "\r\n"
 
       def self.request_to_wire(request)
-        unless request.kind_of?(BaseRequest)
-          raise ArgumentError, "Expected #kind_of? ::%s" % BaseRequest.name
+        unless request.is_a?(BaseRequest)
+          raise ArgumentError, 'Expected #kind_of? ::%s' % BaseRequest.name
         end
         payload_to_wire request.wrap.encode.to_s
       end
 
       def self.response_to_wire(response)
-        unless response.kind_of?(BaseResponse)
-          raise ArgumentError, "Expected #kind_of? ::%s" % BaseResponse.name
+        unless response.is_a?(BaseResponse)
+          raise ArgumentError, 'Expected #kind_of? ::%s' % BaseResponse.name
         end
         payload_to_wire response.wrap.encode.to_s
       end
 
       def initialize
-        @buffer = ""
+        @buffer = ''
       end
 
       def <<(data)

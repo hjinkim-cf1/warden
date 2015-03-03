@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 require "rspec/core/rake_task"
 require "rspec/core/version"
@@ -67,7 +67,7 @@ namespace :warden do
   end
 end
 
-task :ensure_coding do
+task :ensure_encoding do
   patterns = [
     /Rakefile$/,
     /\.rb$/,
@@ -77,7 +77,7 @@ task :ensure_coding do
     patterns.any? { |e| e.match(file) }
   end
 
-  header = "# coding: UTF-8\n\n"
+  header = "# encoding: UTF-8\n\n"
 
   files.each do |file|
     content = File.read(file)

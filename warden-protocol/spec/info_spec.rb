@@ -1,23 +1,25 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "spec_helper"
+require 'spec_helper'
 
 describe Warden::Protocol::InfoRequest do
   subject(:request) do
-    described_class.new(:handle => "handle")
+    described_class.new(handle: 'handle')
   end
 
-  it_should_behave_like "wrappable request"
+  it_should_behave_like 'wrappable request'
 
-  its("class.type_camelized") { should == "Info" }
-  its("class.type_underscored") { should == "info" }
+  it 'has a class type' do
+    expect(request.class.type_camelized).to eq('Info')
+    expect(request.class.type_underscored).to eq('info')
+  end
 
   field :handle do
     it_should_be_required
     it_should_be_typed_as_string
   end
 
-  it "should respond to #create_response" do
+  it 'should respond to #create_response' do
     request.create_response.should be_a(Warden::Protocol::InfoResponse)
   end
 end
@@ -56,10 +58,12 @@ describe Warden::Protocol::InfoResponse do
     described_class.new
   end
 
-  it_should_behave_like "wrappable response"
+  it_should_behave_like 'wrappable response'
 
-  its("class.type_camelized") { should == "Info" }
-  its("class.type_underscored") { should == "info" }
+  it 'has a class type' do
+    expect(response.class.type_camelized).to eq('Info')
+    expect(response.class.type_underscored).to eq('info')
+  end
 
   it { should be_ok }
   it { should_not be_error }
@@ -72,8 +76,8 @@ describe Warden::Protocol::InfoResponse do
   field :events do
     it_should_be_optional
 
-    it "should allow one or more events" do
-      subject.events = ["a", "b"]
+    it 'should allow one or more events' do
+      subject.events = ['a', 'b']
       subject.should be_valid
     end
   end
@@ -96,7 +100,7 @@ describe Warden::Protocol::InfoResponse do
   field :cpu_stat do
     it_should_be_optional
 
-    it "should allow instances of CpuStat" do
+    it 'should allow instances of CpuStat' do
       subject.cpu_stat = Warden::Protocol::InfoResponse::CpuStat.new
       subject.should be_valid
     end
@@ -105,7 +109,7 @@ describe Warden::Protocol::InfoResponse do
   field :disk_stat do
     it_should_be_optional
 
-    it "should allow instances of DiskStat" do
+    it 'should allow instances of DiskStat' do
       subject.disk_stat = Warden::Protocol::InfoResponse::DiskStat.new
       subject.should be_valid
     end
@@ -114,7 +118,7 @@ describe Warden::Protocol::InfoResponse do
   field :job_ids do
     it_should_be_optional
 
-    it "should allow one or more job ids" do
+    it 'should allow one or more job ids' do
       subject.job_ids = [1, 2]
       subject.should be_valid
     end

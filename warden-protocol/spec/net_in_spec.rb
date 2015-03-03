@@ -1,16 +1,18 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "spec_helper"
+require 'spec_helper'
 
 describe Warden::Protocol::NetInRequest do
   subject(:request) do
-    described_class.new(:handle => "handle")
+    described_class.new(handle: 'handle')
   end
 
-  it_should_behave_like "wrappable request"
+  it_should_behave_like 'wrappable request'
 
-  its("class.type_camelized") { should == "NetIn" }
-  its("class.type_underscored") { should == "net_in" }
+  it 'has a class type' do
+    expect(request.class.type_camelized).to eq('NetIn')
+    expect(request.class.type_underscored).to eq('net_in')
+  end
 
   field :handle do
     it_should_be_required
@@ -27,20 +29,22 @@ describe Warden::Protocol::NetInRequest do
     it_should_be_typed_as_uint
   end
 
-  it "should respond to #create_response" do
+  it 'should respond to #create_response' do
     request.create_response.should be_a(Warden::Protocol::NetInResponse)
   end
 end
 
 describe Warden::Protocol::NetInResponse do
   subject(:response) do
-    described_class.new(:host_port => 1234, :container_port => 1234)
+    described_class.new(host_port: 1234, container_port: 1234)
   end
 
-  it_should_behave_like "wrappable response"
+  it_should_behave_like 'wrappable response'
 
-  its("class.type_camelized") { should == "NetIn" }
-  its("class.type_underscored") { should == "net_in" }
+  it 'has a class type' do
+    expect(response.class.type_camelized).to eq('NetIn')
+    expect(response.class.type_underscored).to eq('net_in')
+  end
 
   it { should be_ok }
   it { should_not be_error }

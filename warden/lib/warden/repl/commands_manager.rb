@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 require "warden/protocol"
 require "forwardable"
@@ -220,7 +220,7 @@ module Warden::Repl
       spawn_command = Warden::Protocol::SpawnRequest.new
 
       clone = Warden::Protocol::RunRequest.decode(run_command.encode)
-      clone.fields.each_value do |field|
+      clone.__beefcake_fields__.each_value do |field|
         value = clone.send("#{field.name}")
         spawn_command.send("#{field.name}=", value) if value
       end
@@ -246,7 +246,7 @@ module Warden::Repl
 
     # Raised when an enum cannot be serialized due to ambiguity in its
     # definition.
-    class EnumEncodingError < StandardError
+    class EnumEnencodingError < StandardError
     end
 
     def to_type(klass)
@@ -324,7 +324,7 @@ module Warden::Repl
       end
 
       serialized = {}
-      obj.fields.each_value do |field_info|
+      obj.__beefcake_fields__.each_value do |field_info|
         field_name = "#{field_info.name.to_s}"
         field = obj.send(field_name)
         next if !field
@@ -342,7 +342,7 @@ module Warden::Repl
         elsif field_info.type.is_a?(Module) # enum field
           begin
             serialized[field_name] = get_constant(field_info.type, field)
-          rescue EnumEncodingError => eee
+          rescue EnumEnencodingError => eee
             msg = "Cannot serialize enum field: #{field_name}. #{eee.message}"
             raise SerializationError, msg
           end
@@ -361,7 +361,7 @@ module Warden::Repl
         if type.const_get(constant) == value
           if to_return
             msg = "Duplicate constants defined in module: #{type}."
-            raise EnumEncodingError,  msg
+            raise EnumEnencodingError,  msg
           end
 
           to_return = constant.to_s
@@ -383,7 +383,7 @@ module Warden::Repl
     # definition.
     def get_fields_map(request)
       fields_map = {}
-      request.fields.each_value do |field|
+      request.__beefcake_fields__.each_value do |field|
         fields_map[field.name.to_s] = field
       end
 

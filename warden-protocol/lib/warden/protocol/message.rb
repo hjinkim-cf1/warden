@@ -1,6 +1,6 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "warden/protocol/base"
+require 'warden/protocol/base'
 
 module Warden
   module Protocol
@@ -24,12 +24,12 @@ module Warden
         end
 
         def self.to_request_klass(type)
-          @request_klass_map ||= generate_klass_map("Request")
+          @request_klass_map ||= generate_klass_map('Request')
           @request_klass_map[type]
         end
 
         def self.to_response_klass(type)
-          @response_klass_map ||= generate_klass_map("Response")
+          @response_klass_map ||= generate_klass_map('Response')
           @response_klass_map[type]
         end
       end

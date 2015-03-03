@@ -1,17 +1,19 @@
-# coding: UTF-8
+# encoding: UTF-8
 
-require "spec_helper"
+require 'spec_helper'
 
 module Warden::Protocol
   describe RunRequest do
     subject(:request) do
-      described_class.new(:handle => "handle", :script => "echo foo")
+      described_class.new(handle: 'handle', script: 'echo foo')
     end
 
-    it_should_behave_like "wrappable request"
+    it_should_behave_like 'wrappable request'
 
-    its("class.type_camelized") { should == "Run" }
-    its("class.type_underscored") { should == "run" }
+    it 'has a class type' do
+      expect(request.class.type_camelized).to eq('Run')
+      expect(request.class.type_underscored).to eq('run')
+    end
 
     field :handle do
       it_should_be_required
@@ -39,13 +41,13 @@ module Warden::Protocol
     field :rlimits do
       it_should_be_optional
 
-      it "should be populated with ResourceLimits object" do
+      it 'should be populated with ResourceLimits object' do
         request.rlimits = ResourceLimits.new
         request.should be_valid
       end
     end
 
-    it "should respond to #create_response" do
+    it 'should respond to #create_response' do
       request.create_response.should be_a(RunResponse)
     end
   end
@@ -55,10 +57,12 @@ module Warden::Protocol
       described_class.new
     end
 
-    it_should_behave_like "wrappable response"
+    it_should_behave_like 'wrappable response'
 
-    its("class.type_camelized") { should == "Run" }
-    its("class.type_underscored") { should == "run" }
+    it 'has a class type' do
+      expect(response.class.type_camelized).to eq('Run')
+      expect(response.class.type_underscored).to eq('run')
+    end
 
     it { should be_ok }
     it { should_not be_error }
@@ -81,7 +85,7 @@ module Warden::Protocol
     field :info do
       it_should_be_optional
 
-      it "should be a InfoResponse" do
+      it 'should be a InfoResponse' do
         field.type.should == InfoResponse
       end
     end

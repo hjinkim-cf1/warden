@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 # this file has the tests for nested warden feature.
 # These tests don't fit into linux_spec.rb because in linux_spec.rb all before/after hooks are :each,

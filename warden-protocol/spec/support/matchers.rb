@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 RSpec::Matchers.define :be_valid do
   error = nil
@@ -9,7 +9,7 @@ RSpec::Matchers.define :be_valid do
     rescue => error
     end
 
-    error == nil
+    error.nil?
   end
 
   failure_message_for_should do |actual|

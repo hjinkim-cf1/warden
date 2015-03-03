@@ -1,4 +1,4 @@
-# coding: UTF-8
+# encoding: UTF-8
 
 require "warden/container/base"
 require "warden/container/features/cgroup"
@@ -10,11 +10,8 @@ require "warden/errors"
 require "shellwords"
 
 module Warden
-
   module Container
-
     class Linux < Base
-
       include Features::Cgroup
       include Features::Net
       include Features::MemLimit
